@@ -19,7 +19,7 @@
       <aside class="sidebar">
         <a class="brand" href="#" aria-label="Carriage House home">
           <span class="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 32 32" fill="none"><path d="M7 23 12.4 9h4.2l5.4 14M10 18h12M24 9l2 5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="25" cy="23" r="2" fill="currentColor"/></svg>
+            <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="10.5" stroke="currentColor" stroke-width="2"/><path d="M16 5.5v21M5.5 16h21M8.58 8.58l14.84 14.84M23.42 8.58 8.58 23.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="16" cy="16" r="3" fill="#f2bd6a" stroke="#fff" stroke-width="1.5"/></svg>
           </span>
           <span class="brand-name">Carriage House<span>.</span></span>
         </a>
@@ -44,8 +44,8 @@
             <p>Your routes are saved on this device, so they’re ready when you are.</p>
           </div>
           <div class="driver-profile">
-            <div class="avatar">JD</div>
-            <div><strong>Jordan Davis</strong><span>Bus driver</span></div>
+            <div class="avatar" id="driver-initials">JD</div>
+            <div><strong id="driver-sidebar-name">Jordan Davis</strong><span>Bus driver</span></div>
             <span class="profile-dots" aria-hidden="true">···</span>
           </div>
         </div>
@@ -59,7 +59,7 @@
             <button class="icon-button" id="top-settings" type="button" aria-label="Open preferences" title="Preferences">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm0-5v2m0 13v2m9-8h-2m-14 0H3m15.36-6.36-1.42 1.42M7.06 16.94l-1.42 1.42m12.72 0-1.42-1.42M7.06 7.06 5.64 5.64" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
             </button>
-            <div class="top-avatar" aria-label="Jordan Davis">JD</div>
+            <div class="top-avatar" id="driver-top-initials" aria-label="Jordan Davis">JD</div>
           </div>
         </header>
 
@@ -67,7 +67,7 @@
           <div class="welcome-row">
             <div>
               <div class="eyebrow"><span class="live-dot"></span> YOUR ROUTE DESK</div>
-              <h1>Good morning, Jordan <span class="wave" aria-hidden="true">✳</span></h1>
+              <h1>Good morning, <span id="driver-greeting-name">Jordan</span> <span class="wave" aria-hidden="true">✳</span></h1>
               <p class="page-subtitle" id="today-label">Your routes, stops, and riders—all in one place.</p>
             </div>
             <button class="button button-primary" id="new-route" type="button">
@@ -104,6 +104,7 @@
               </div>
               <div class="route-list" id="route-list"></div>
               <button class="add-route-row" id="add-route-row" type="button"><span>+</span> Add another route</button>
+              <button class="remove-examples-button" id="remove-example-routes" type="button" data-action="remove-examples" hidden>Remove example routes</button>
               <div class="routes-footnote"><span class="footnote-check">✓</span> Saved automatically on this device</div>
             </div>
 
@@ -145,6 +146,7 @@
           <button class="modal-close" type="button" data-close="settings-modal" aria-label="Close">×</button>
         </div>
         <form id="settings-form">
+          <label class="setting-row" for="driver-name-setting"><span><strong>Bus driver name</strong><small>Shown in your profile and greeting</small></span><input class="driver-name-input" id="driver-name-setting" type="text" maxlength="60" autocomplete="name" required></label>
           <label class="setting-row" for="timer-setting"><span><strong>Stop timer</strong><small>Time at each stop before moving on</small></span><span class="number-field"><input id="timer-setting" type="number" min="1" max="60" required><span>min</span></span></label>
           <label class="setting-row" for="drive-setting"><span><strong>Average travel between stops</strong><small>Used to estimate your total route time</small></span><span class="number-field"><input id="drive-setting" type="number" min="1" max="180" required><span>min</span></span></label>
           <label class="setting-row" for="navigation-setting"><span><strong>Navigation app</strong><small>Opens directions to the next stop</small></span><select id="navigation-setting" class="navigation-select"><option value="google">Google Maps</option><option value="apple">Apple Maps</option><option value="waze">Waze</option></select></label>

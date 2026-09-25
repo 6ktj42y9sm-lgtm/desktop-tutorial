@@ -1,8 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#168966"/>
-  <path d="M112 342V178c0-25 20-45 45-45h198c25 0 45 20 45 45v164" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="27"/>
-  <path d="M112 267h288M165 342v38m182-38v38M171 202h2m166 0h2" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="27"/>
-  <path d="M222 133v132" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="18"/>
-  <circle cx="224" cy="286" r="18" fill="#f2bd6a"/>
-  <circle cx="348" cy="286" r="18" fill="#f2bd6a"/>
+  <defs>
+    <linearGradient id="enamel" x1="62" x2="458" y1="42" y2="470" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#246b54"/>
+      <stop offset="1" stop-color="#103f37"/>
+    </linearGradient>
+    <linearGradient id="brass" x1="134" x2="384" y1="119" y2="397" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffe5aa"/>
+      <stop offset=".55" stop-color="#d8a45b"/>
+      <stop offset="1" stop-color="#f4d597"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#enamel)"/>
+  <circle cx="256" cy="256" r="157" fill="none" stroke="#0c332e" stroke-linecap="round" stroke-width="35"/>
+  <circle cx="256" cy="250" r="150" fill="none" stroke="url(#brass)" stroke-width="26"/>
+  <circle cx="256" cy="250" r="131" fill="none" stroke="#fff0ca" stroke-opacity=".92" stroke-width="7"/>
+  <g stroke="url(#brass)" stroke-linecap="round" stroke-width="15">
+    <path d="M256 225V119"/>
+    <path d="m274 232 75-75"/>
+    <path d="M281 250h106"/>
+    <path d="m274 268 75 75"/>
+    <path d="M256 275v106"/>
+    <path d="m238 268-75 75"/>
+    <path d="M231 250H125"/>
+    <path d="m238 232-75-75"/>
+  </g>
+  <circle cx="256" cy="250" r="31" fill="url(#brass)" stroke="#fff0ca" stroke-width="7"/>
+  <circle cx="256" cy="250" r="10" fill="#174d40"/>
 </svg>

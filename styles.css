@@ -107,6 +107,9 @@ h1 { margin: 10px 0 5px; font: 700 26px/1.35 "Segoe UI", Arial, sans-serif; lett
 .add-route-row { width: 100%; display: flex; align-items: center; gap: 9px; margin-top: 9px; padding: 10px 9px; border: 1px dashed #dfe5e0; border-radius: 8px; color: #737e7a; background: #fff; text-align: left; font-size: 10px; cursor: pointer; }
 .add-route-row span { color: #178966; font-size: 17px; line-height: 12px; }
 .add-route-row:hover { background: #f7fbf8; border-color: #b5d9c5; }
+.remove-examples-button { margin: 9px 0 0 8px; padding: 4px 0; border: 0; color: #a15d51; background: transparent; font-size: 9px; cursor: pointer; }
+.remove-examples-button:hover { color: #7e3d32; text-decoration: underline; }
+.remove-examples-button[hidden] { display: none; }
 .routes-footnote { display: flex; align-items: center; gap: 6px; margin: 14px 3px 1px; color: #a2a7a8; font-size: 9px; }
 .footnote-check { display: grid; width: 14px; height: 14px; place-items: center; border-radius: 50%; color: #268c69; background: #e8f5ef; font-size: 8px; font-weight: 700; }
 
@@ -232,6 +235,7 @@ h1 { margin: 10px 0 5px; font: 700 26px/1.35 "Segoe UI", Arial, sans-serif; lett
 .setting-row small { margin-top: 4px; color: #969d9c; font-size: 9px; }
 .number-field { display: flex; align-items: center; gap: 7px; color: #909896; font-size: 9px; }
 .number-field input { width: 58px; height: 31px; padding: 0 7px; border: 1px solid #e4e8e4; border-radius: 6px; color: #3e4845; font-size: 10px; text-align: center; }
+.driver-name-input { width: min(210px, 48%); height: 32px; padding: 0 9px; border: 1px solid #e4e8e4; border-radius: 6px; color: #3e4845; background: white; font-size: 10px; }
 .settings-note { margin: 8px 0 0; padding: 9px 10px; border-radius: 6px; color: #7c8981; background: #f2f7f3; font-size: 9px; line-height: 1.5; }
 .navigation-select { min-width: 119px; height: 31px; padding: 0 8px; border: 1px solid #e4e8e4; border-radius: 6px; color: #3e4845; background: #fff; font-size: 9px; }
 .install-message { padding: 12px 13px; border: 1px solid #e2eee5; border-radius: 8px; color: #63736a; background: #f4f8f4; font-size: 10px; line-height: 1.7; }

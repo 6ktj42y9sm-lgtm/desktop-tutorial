@@ -18,12 +18,14 @@ Choose Google Maps, Apple Maps, or Waze in **Preferences**. Carriage House hands
 
 ## Features
 
-- Add, edit, copy, and delete routes.
+- Add, edit, copy, and delete routes. The app starts empty. If example routes are already saved on this device, select **Remove example routes** below the route list; routes you created are kept.
 - Add, remove, and reorder stops by adding them in the desired order.
 - Give every stop a custom name and address for navigation.
 - Add rider profiles at each stop, labeled pickup or drop-off, with optional notes.
+- Set the bus driver's display name in route preferences.
 - Start, pause, reset, or manually complete a configurable stop timer.
 - Automatically advance to the next stop when its timer expires.
 - See estimated route durations and rider assignments.
 - Install the app on supported phones and tablets from its HTTPS website after publishing to GitHub Pages.
 - Reopen the app shell offline after the first visit; navigation requires the selected navigation app and its network access.
+- Use a carriage-wheel design for the app icon.

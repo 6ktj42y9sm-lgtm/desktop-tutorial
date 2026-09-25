@@ -1,5 +1,6 @@
 const STORAGE_KEY = "wayline-route-planner-v1";
-const DEFAULT_SETTINGS = { stopTimerMinutes: 3, travelMinutesPerStop: 8, navigationApp: "google" };
+const DEFAULT_SETTINGS = { driverName: "Jordan Davis", stopTimerMinutes: 3, travelMinutesPerStop: 8, navigationApp: "google" };
+const SAMPLE_ROUTE_IDS = new Set(["route-northside", "route-west-loop", "route-lake"]);
 
 const icon = (name) => {
   const paths = {
@@ -17,35 +18,6 @@ const icon = (name) => {
   return `<svg viewBox="0 0 24 24" aria-hidden="true">${paths[name] || ""}</svg>`;
 };
 
-const sampleRoutes = [
-  {
-    id: "route-northside",
-    name: "Northside morning run",
-    stops: [
-      { id: "stop-ns-1", name: "Maple & 4th", address: "1220 Maple Street, Denver, CO", people: [{ id: "rider-ns-1", name: "Avery Brooks", direction: "pickup", note: "" }, { id: "rider-ns-2", name: "Riley Chen", direction: "pickup", note: "" }] },
-      { id: "stop-ns-2", name: "Pinecrest Apartments", address: "800 E 12th Avenue, Denver, CO", people: [{ id: "rider-ns-3", name: "Sam Rivera", direction: "pickup", note: "" }] },
-      { id: "stop-ns-3", name: "Lincoln Elementary", address: "1235 Lincoln Street, Denver, CO", people: [{ id: "rider-ns-4", name: "Avery Brooks", direction: "dropoff", note: "" }, { id: "rider-ns-5", name: "Riley Chen", direction: "dropoff", note: "" }, { id: "rider-ns-6", name: "Sam Rivera", direction: "dropoff", note: "" }] },
-    ],
-  },
-  {
-    id: "route-west-loop",
-    name: "West loop · afternoon",
-    stops: [
-      { id: "stop-wl-1", name: "Cedar Grove", address: "4900 W 32nd Avenue, Denver, CO", people: [{ id: "rider-wl-1", name: "Jamie Patel", direction: "pickup", note: "" }] },
-      { id: "stop-wl-2", name: "Park Hill Library", address: "4705 Montview Boulevard, Denver, CO", people: [{ id: "rider-wl-2", name: "Taylor Reed", direction: "pickup", note: "" }] },
-      { id: "stop-wl-3", name: "Eastview Middle School", address: "1005 Elm Street, Denver, CO", people: [{ id: "rider-wl-3", name: "Jamie Patel", direction: "dropoff", note: "" }, { id: "rider-wl-4", name: "Taylor Reed", direction: "dropoff", note: "" }] },
-    ],
-  },
-  {
-    id: "route-lake",
-    name: "Lakeside shuttle",
-    stops: [
-      { id: "stop-lk-1", name: "Willow Park entrance", address: "3010 W 10th Avenue, Denver, CO", people: [{ id: "rider-lk-1", name: "Morgan Lee", direction: "pickup", note: "" }] },
-      { id: "stop-lk-2", name: "Community Center", address: "1820 Federal Boulevard, Denver, CO", people: [{ id: "rider-lk-2", name: "Morgan Lee", direction: "dropoff", note: "" }] },
-    ],
-  },
-];
-
 const escapeHTML = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
 }[character]));
@@ -55,16 +27,25 @@ const formatDuration = (minutes) => minutes >= 60
   ? `${Math.floor(minutes / 60)} hr${Math.floor(minutes / 60) === 1 ? "" : "s"}${minutes % 60 ? ` ${minutes % 60} min` : ""}`
   : `${minutes} min`;
 const formatClock = (seconds) => `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+const getInitials = (name) => {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  return parts.length > 1
+    ? `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase()
+    : (parts[0] || "D").slice(0, 2).toUpperCase();
+};
 
 function readSavedData() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { routes: sampleRoutes, settings: DEFAULT_SETTINGS, isNew: true };
+    if (!raw) return { routes: [], settings: DEFAULT_SETTINGS, isNew: true };
     const parsed = JSON.parse(raw);
     if (!parsed || !Array.isArray(parsed.routes) || !parsed.settings) throw new Error("Saved route data has an invalid format.");
     return {
       routes: parsed.routes.filter((route) => route && typeof route.id === "string" && typeof route.name === "string" && Array.isArray(route.stops)),
       settings: {
+        driverName: typeof parsed.settings.driverName === "string" && parsed.settings.driverName.trim()
+          ? parsed.settings.driverName.trim()
+          : DEFAULT_SETTINGS.driverName,
         stopTimerMinutes: Number(parsed.settings.stopTimerMinutes) || DEFAULT_SETTINGS.stopTimerMinutes,
         travelMinutesPerStop: Number(parsed.settings.travelMinutesPerStop) || DEFAULT_SETTINGS.travelMinutesPerStop,
         navigationApp: ["google", "apple", "waze"].includes(parsed.settings.navigationApp)
@@ -75,7 +56,7 @@ function readSavedData() {
     };
   } catch (error) {
     console.error("Could not load saved Carriage House data.", error);
-    return { routes: sampleRoutes, settings: DEFAULT_SETTINGS, loadError: true };
+    return { routes: [], settings: DEFAULT_SETTINGS, loadError: true };
   }
 }
 
@@ -126,6 +107,13 @@ function render() {
   document.querySelector("#stat-routes").textContent = routeCount;
   document.querySelector("#stat-stops").textContent = stopCount;
   document.querySelector("#stat-duration").textContent = formatDuration(totalMinutes);
+  const driverName = state.settings.driverName || DEFAULT_SETTINGS.driverName;
+  const driverInitials = getInitials(driverName);
+  document.querySelector("#driver-greeting-name").textContent = driverName.split(/\s+/)[0];
+  document.querySelector("#driver-sidebar-name").textContent = driverName;
+  document.querySelector("#driver-initials").textContent = driverInitials;
+  document.querySelector("#driver-top-initials").textContent = driverInitials;
+  document.querySelector("#driver-top-initials").setAttribute("aria-label", driverName);
 
   routeList.innerHTML = state.routes.length ? state.routes.map((route) => `
     <button class="route-item ${route.id === state.selectedRouteId ? "selected" : ""}" type="button" data-route="${escapeHTML(route.id)}" aria-pressed="${route.id === state.selectedRouteId}">
@@ -133,6 +121,7 @@ function render() {
       <span class="route-item-copy"><strong>${escapeHTML(route.name)}</strong><span>${route.stops.length} stop${route.stops.length === 1 ? "" : "s"}</span></span>
       <span class="route-item-duration">${formatDuration(getRouteMinutes(route, state.settings))}</span>
     </button>`).join("") : `<div class="routes-footnote">No routes yet. Create one to get started.</div>`;
+  document.querySelector("#remove-example-routes").hidden = !state.routes.some((route) => SAMPLE_ROUTE_IDS.has(route.id));
 
   if (!selected) {
     routeDetail.innerHTML = `<section class="empty-state"><span class="empty-icon">${icon("route")}</span><h2>Your next route starts here</h2><p>Add your stops in the order you want, then add the riders you’ll pick up or drop off.</p><button class="button button-primary" type="button" data-action="new">${icon("route")} Create your first route</button></section>`;
@@ -305,6 +294,7 @@ document.addEventListener("click", (event) => {
   }
   const settingsTrigger = event.target.closest("#sidebar-settings, #top-settings");
   if (settingsTrigger) {
+    document.querySelector("#driver-name-setting").value = state.settings.driverName;
     document.querySelector("#timer-setting").value = state.settings.stopTimerMinutes;
     document.querySelector("#drive-setting").value = state.settings.travelMinutesPerStop;
     document.querySelector("#navigation-setting").value = state.settings.navigationApp;
@@ -389,6 +379,23 @@ document.addEventListener("click", (event) => {
       state.currentStopIndex = 0;
       render();
       showNotice("Route completed. Nice work!");
+      break;
+    case "remove-examples":
+      if (state.routes.some((item) => SAMPLE_ROUTE_IDS.has(item.id)) && window.confirm("Remove the example routes from this device? Any routes you created will be kept.")) {
+        const activeRouteIsExample = SAMPLE_ROUTE_IDS.has(state.activeRouteId);
+        state.routes = state.routes.filter((item) => !SAMPLE_ROUTE_IDS.has(item.id));
+        if (activeRouteIsExample) {
+          window.clearInterval(state.timerId);
+          state.timerId = null;
+          state.activeRouteId = null;
+          state.currentStopIndex = 0;
+          state.remainingSeconds = null;
+        }
+        if (!state.routes.some((item) => item.id === state.selectedRouteId)) state.selectedRouteId = state.routes[0]?.id || null;
+        persist();
+        render();
+        showNotice("Example routes removed. Routes you created were kept.");
+      }
       break;
   }
 });
@@ -489,6 +496,7 @@ document.querySelector("#route-form").addEventListener("submit", (event) => {
 
 document.querySelector("#settings-form").addEventListener("submit", (event) => {
   event.preventDefault();
+  const driverName = document.querySelector("#driver-name-setting").value.trim();
   const timerMinutes = Number(document.querySelector("#timer-setting").value);
   const travelMinutes = Number(document.querySelector("#drive-setting").value);
   const navigationApp = document.querySelector("#navigation-setting").value;
@@ -500,7 +508,12 @@ document.querySelector("#settings-form").addEventListener("submit", (event) => {
     showNotice("Choose a supported navigation app.");
     return;
   }
-  state.settings = { stopTimerMinutes: timerMinutes, travelMinutesPerStop: travelMinutes, navigationApp };
+  if (!driverName) {
+    showNotice("Enter the bus driver name to show in your profile.");
+    document.querySelector("#driver-name-setting").focus();
+    return;
+  }
+  state.settings = { driverName, stopTimerMinutes: timerMinutes, travelMinutesPerStop: travelMinutes, navigationApp };
   if (state.activeRouteId && state.remainingSeconds !== null && !state.timerId) state.remainingSeconds = timerMinutes * 60;
   persist();
   render();
@@ -567,6 +580,6 @@ if (window.location.protocol !== "file:" && "serviceWorker" in navigator) {
 
 if (/iphone|ipad|ipod/i.test(navigator.userAgent) && !window.navigator.standalone) installButton.hidden = false;
 if (window.location.protocol === "file:") installButton.hidden = false;
-if (initialData.loadError) showNotice("Saved data could not be read. Sample routes are shown; check the browser console for details.");
+if (initialData.loadError) showNotice("Saved data could not be read. Start with a new route; check the browser console for details.");
 if (initialData.isNew) persist();
 render();

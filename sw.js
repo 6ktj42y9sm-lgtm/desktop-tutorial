@@ -1,4 +1,4 @@
-const CACHE_NAME = "carriage-house-shell-v1";
+const CACHE_NAME = "carriage-house-shell-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
