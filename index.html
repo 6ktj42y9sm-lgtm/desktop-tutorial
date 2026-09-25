@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f6f4">
+    <title>Carriage House - Bus Route Planner</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Carriage House">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icons/carriage-house.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icons/carriage-house-180.png">
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#" aria-label="Carriage House home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none"><path d="M7 23 12.4 9h4.2l5.4 14M10 18h12M24 9l2 5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="25" cy="23" r="2" fill="currentColor"/></svg>
+          </span>
+          <span class="brand-name">Carriage House<span>.</span></span>
+        </a>
+
+        <div class="side-label">WORKSPACE</div>
+        <button class="nav-item active" type="button" aria-label="My routes">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16v13H4zM8 9h8M8 13h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>My routes</span>
+          <span class="nav-count" id="nav-route-count">0</span>
+        </button>
+        <button class="nav-item" id="sidebar-settings" type="button" aria-label="Preferences">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm0-5v2m0 13v2m9-8h-2m-14 0H3m15.36-6.36-1.42 1.42M7.06 16.94l-1.42 1.42m12.72 0-1.42-1.42M7.06 7.06 5.64 5.64" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          <span>Preferences</span>
+        </button>
+
+        <div class="sidebar-bottom">
+          <div class="help-card">
+            <div class="help-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 1 0 8.5 8.5M12 7v5l3.5 2M18 3.5v5m-2.5-2.5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <strong>Every stop, on time.</strong>
+            <p>Your routes are saved on this device, so they’re ready when you are.</p>
+          </div>
+          <div class="driver-profile">
+            <div class="avatar">JD</div>
+            <div><strong>Jordan Davis</strong><span>Bus driver</span></div>
+            <span class="profile-dots" aria-hidden="true">···</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="breadcrumbs"><span>Workspace</span><span class="crumb-slash">/</span><strong>My routes</strong></div>
+          <div class="topbar-actions">
+            <button class="install-button" id="install-app" type="button">Install app</button>
+            <button class="icon-button" id="top-settings" type="button" aria-label="Open preferences" title="Preferences">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm0-5v2m0 13v2m9-8h-2m-14 0H3m15.36-6.36-1.42 1.42M7.06 16.94l-1.42 1.42m12.72 0-1.42-1.42M7.06 7.06 5.64 5.64" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </button>
+            <div class="top-avatar" aria-label="Jordan Davis">JD</div>
+          </div>
+        </header>
+
+        <div class="page-wrap">
+          <div class="welcome-row">
+            <div>
+              <div class="eyebrow"><span class="live-dot"></span> YOUR ROUTE DESK</div>
+              <h1>Good morning, Jordan <span class="wave" aria-hidden="true">✳</span></h1>
+              <p class="page-subtitle" id="today-label">Your routes, stops, and riders—all in one place.</p>
+            </div>
+            <button class="button button-primary" id="new-route" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              Create a route
+            </button>
+          </div>
+
+          <div class="notice" id="notice" role="status" hidden></div>
+
+          <section class="stats-grid" aria-label="Route summary">
+            <article class="stat-card">
+              <div class="stat-icon icon-lavender"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5h14v13H5zM8.5 9h7M8.5 12.5h7M8.5 16h4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="stat-copy"><span>Saved routes</span><strong id="stat-routes">0</strong></div>
+              <span class="stat-decoration">↗</span>
+            </article>
+            <article class="stat-card">
+              <div class="stat-icon icon-peach"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4ZM5.5 19.5c.7-3 2.8-4.5 6.5-4.5s5.8 1.5 6.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="stat-copy"><span>Stops today</span><strong id="stat-stops">0</strong></div>
+              <span class="stat-decoration">↗</span>
+            </article>
+            <article class="stat-card">
+              <div class="stat-icon icon-mint"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 7v5l3.3 2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="stat-copy"><span>All route time</span><strong id="stat-duration">0 min</strong></div>
+              <span class="stat-decoration">↗</span>
+            </article>
+          </section>
+
+          <section class="workspace-grid" aria-label="Routes and selected route">
+            <div class="routes-panel panel">
+              <div class="panel-heading">
+                <div><h2>Your routes</h2><p>Pick a route to see its stops</p></div>
+                <button class="small-add" id="new-route-small" type="button" aria-label="Create a route">+</button>
+              </div>
+              <div class="route-list" id="route-list"></div>
+              <button class="add-route-row" id="add-route-row" type="button"><span>+</span> Add another route</button>
+              <div class="routes-footnote"><span class="footnote-check">✓</span> Saved automatically on this device</div>
+            </div>
+
+            <div class="detail-column" id="route-detail"></div>
+          </section>
+
+          <footer class="page-footer">
+            <span>Made for the miles that matter.</span>
+            <span><i></i> All changes saved locally</span>
+          </footer>
+        </div>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="route-modal" hidden>
+      <section class="modal route-modal" role="dialog" aria-modal="true" aria-labelledby="route-modal-title">
+        <div class="modal-header">
+          <div><span class="eyebrow">ROUTE BUILDER</span><h2 id="route-modal-title">Create a route</h2><p>Make it yours. You can change the order any time.</p></div>
+          <button class="modal-close" type="button" data-close="route-modal" aria-label="Close">×</button>
+        </div>
+        <form id="route-form">
+          <label class="field-label" for="route-name">Route name</label>
+          <input class="text-input" id="route-name" name="routeName" maxlength="60" placeholder="e.g. Northside morning run" required>
+          <div class="stops-form-heading"><div><h3>Stops <span id="editor-stop-count">0</span></h3><p>Add the places you visit in order.</p></div></div>
+          <div id="stop-editor-list" class="stop-editor-list"></div>
+          <button class="add-stop-button" id="add-stop" type="button"><span>+</span> Add a stop</button>
+          <div class="modal-footer">
+            <button class="button button-quiet" type="button" data-close="route-modal">Cancel</button>
+            <button class="button button-primary" type="submit">Save route</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="settings-modal" hidden>
+      <section class="modal settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+        <div class="modal-header">
+          <div><span class="eyebrow">YOUR PREFERENCES</span><h2 id="settings-title">Route settings</h2><p>Set the pace that works for your day.</p></div>
+          <button class="modal-close" type="button" data-close="settings-modal" aria-label="Close">×</button>
+        </div>
+        <form id="settings-form">
+          <label class="setting-row" for="timer-setting"><span><strong>Stop timer</strong><small>Time at each stop before moving on</small></span><span class="number-field"><input id="timer-setting" type="number" min="1" max="60" required><span>min</span></span></label>
+          <label class="setting-row" for="drive-setting"><span><strong>Average travel between stops</strong><small>Used to estimate your total route time</small></span><span class="number-field"><input id="drive-setting" type="number" min="1" max="180" required><span>min</span></span></label>
+          <label class="setting-row" for="navigation-setting"><span><strong>Navigation app</strong><small>Opens directions to the next stop</small></span><select id="navigation-setting" class="navigation-select"><option value="google">Google Maps</option><option value="apple">Apple Maps</option><option value="waze">Waze</option></select></label>
+          <p class="settings-note">Estimated time includes travel and stop time for every stop. Actual times may vary with traffic.</p>
+          <div class="modal-footer">
+            <button class="button button-quiet" type="button" data-close="settings-modal">Cancel</button>
+            <button class="button button-primary" type="submit">Save preferences</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="install-modal" hidden>
+      <section class="modal install-modal" role="dialog" aria-modal="true" aria-labelledby="install-title">
+        <div class="modal-header">
+          <div><span class="eyebrow">TAKE IT ON THE ROAD</span><h2 id="install-title">Install Carriage House</h2><p>Keep your route planner handy on your phone or tablet.</p></div>
+          <button class="modal-close" type="button" data-close="install-modal" aria-label="Close">×</button>
+        </div>
+        <div id="install-message" class="install-message"></div>
+        <div class="install-steps">
+          <strong>Use your navigation app for each stop</strong>
+          <p>Choose Google Maps, Apple Maps, or Waze in Route settings. Carriage House will open that app with directions to the next stop. Return here when you arrive to continue the route.</p>
+        </div>
+        <div class="modal-footer"><button class="button button-primary" type="button" data-close="install-modal">Got it</button></div>
+      </section>
+    </div>
+  </body>
+</html>

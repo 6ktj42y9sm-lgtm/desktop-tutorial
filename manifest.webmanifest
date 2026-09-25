@@ -1,0 +1,32 @@
+{
+  "id": "./",
+  "name": "Carriage House - Bus Route Planner",
+  "short_name": "Carriage House",
+  "description": "Plan bus routes, manage stops and riders, and open directions in your navigation app.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f5f6f4",
+  "theme_color": "#f5f6f4",
+  "icons": [
+    {
+      "src": "./icons/carriage-house-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/carriage-house-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/carriage-house.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
